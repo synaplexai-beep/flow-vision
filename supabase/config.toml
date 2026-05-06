@@ -1,1 +1,4 @@
 project_id = "hwprvgsyxmqvenwvqyev"
+
+[functions.kanban-ai]
+verify_jwt = true
