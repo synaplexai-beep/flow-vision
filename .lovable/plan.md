@@ -1,81 +1,99 @@
 
-# Kanban Board with AI Assistant
+# Ember & Oak — Luxury Scented Candle Site
 
-A polished, interactive Kanban app inspired by the reference images — soft neutral background, glassy white cards with subtle shadows, pill-shaped category tags, rounded avatars, and a clean left sidebar. Each user signs in to manage their own private boards, and an AI assistant in a side panel can answer questions and take actions on the board.
+Pivoting the project: the Kanban app is removed and replaced with a cinematic, multi-route luxury candle brand site under the name **Ember & Oak** — *"Handcrafted warmth for modern homes."*
 
-## Design language
+## Brand & design system
 
-Drawing from both reference images:
-- Soft off-white/light gradient background, generous whitespace
-- White cards with very soft shadows + subtle border, rounded-xl corners
-- Pill tags for category (e.g. "Wireframes", "Design", "Media") in muted colors
-- Small avatar in card corner, footer chips for due date, time estimate, comments, time logged
-- Sidebar: app logo, primary nav (Board, Settings), a "Need support?" card, user profile at bottom
-- Subtle hover lift, smooth drag animation, column drop highlights
-- Light/dark theme toggle
+- Palette: matte black `#0E0B08`, deep beige `#C9B79C`, warm ivory `#F5EFE6`, candlelight orange `#FF8A3D`, soft gold `#D4A24C`, cream gradients.
+- Type: serif display (Fraunces) for headlines, clean sans (Inter) for body — loaded via Google Fonts in `__root.tsx`.
+- Motion language: slow easings, subtle parallax, magnetic hovers, scroll reveals, ambient flame flicker.
+- Rebuild `src/styles.css` tokens (light + dark, dark is the primary cinematic theme), add utility classes for glass, glow, grain, magnetic.
 
-## Core features
+## Tech additions
 
-### Authentication
-- Email/password and Google sign-in (Lovable Cloud)
-- Each user has their own private boards and tasks
-- Login/signup pages with the same visual style
-- Profile menu with sign out
+- `bun add three @react-three/fiber @react-three/drei framer-motion lenis` (R3F for hero candle, Framer Motion everywhere, Lenis for inertia scroll).
+- Keep existing shadcn/ui, react-query, Supabase client, Lovable AI gateway.
 
-### Boards & columns (fully customizable)
-- Create multiple boards; switch via sidebar dropdown
-- Rename board, delete board
-- Add / rename / reorder / delete columns
-- Each column shows task count and "+" to add task
+## Route map (TanStack Start)
 
-### Task cards (full feature set)
-- Title, description (rich text)
-- Category tag (with color)
-- Due date
-- Assignee (avatar) — from people you add to the board
-- Priority (Low / Medium / High / Urgent) with color indicator
-- Estimated hours + time logged
-- Comments (count visible, full thread in detail view)
-- Drag-and-drop between columns and reorder within a column
-- Click card → opens detail dialog with all fields editable
-- Quick actions: duplicate, delete, move to column
+```
+src/routes/
+  __root.tsx          shell, fonts, Lenis smooth-scroll, Nav, Footer, AI dock, Cart drawer
+  index.tsx           Hero + featured + benefits teaser + CTA
+  collection.tsx      Full product grid + filters
+  product.$slug.tsx   Product detail w/ 3D candle + add-to-cart
+  about.tsx           Brand story
+  contact.tsx         Form, map, socials, WhatsApp
+```
 
-### AI Assistant (side panel, board-aware + can take actions)
-- Slide-out chat panel triggered from a floating button
-- Streaming responses, markdown rendering
-- Has full context of the current board (columns, tasks, due dates, status)
-- Can answer questions: "What's overdue?", "Summarize my week", "Which tasks need review?"
-- Can take actions via tool calling:
-  - Create task in a column
-  - Move task between columns
-  - Update task fields (due date, priority, assignee, status)
-  - Delete task
-  - Create / rename column
-- After each action, the board updates instantly and the assistant confirms what it did
+Each route gets unique `head()` meta (title/description/og). Old Kanban routes (`board`, `login`, `signup`) and all `src/components/kanban/*`, `src/lib/kanban-*`, `supabase/functions/kanban-ai`, `src/lib/auth.tsx` are deleted.
 
-### Persistence
-- Everything saves automatically to the database as you work (no manual save button)
-- Returning users see all their boards/tasks intact
-- Optimistic UI updates with rollback on error
+## Hybrid 3D hero
 
-## Pages
+- `HeroCandle.tsx` — R3F `<Canvas>` with:
+  - Procedural pillar candle (CylinderGeometry + subtle noise normalMap), wax color responds to ambient point light.
+  - Animated flame: a soft additive sprite + emissive cone, flicker via `useFrame` sin/noise, gently follows cursor.
+  - Warm point light + bloom (`@react-three/drei` `EffectComposer` if light enough; otherwise CSS glow).
+  - Cursor parallax on the camera; OrbitControls disabled.
+- Background: animated gradient + floating ember particles (Framer Motion divs, GPU-cheap) + faint grain overlay.
+- Headline: "Handcrafted warmth for modern homes." with staggered letter reveal.
+- CTAs: magnetic "Explore Collection" + ghost "Experience the Aroma".
 
-- `/` — Marketing landing → CTA to sign up / log in
-- `/login`, `/signup` — Auth pages
-- `/board` — Default board view (redirects to last opened board)
-- `/board/$boardId` — Specific board with Kanban columns + AI panel
+## Sections (index)
 
-## Technical notes
+1. Cinematic hero (above).
+2. Featured trio of candles — tilt cards w/ glow, image zoom on hover.
+3. Benefits — 6 animated cards (Stress Relief, Better Sleep, Luxury Atmosphere, Aromatherapy, Mood, Décor) with lucide icons, scroll-triggered fade/translate.
+4. Scent journey strip — horizontal scroll of categories.
+5. About teaser → links `/about`.
+6. Newsletter / CTA band.
 
-- Database tables: `profiles`, `boards`, `columns`, `tasks`, `comments`, `board_members` (for future collaboration), all with RLS scoped to `auth.uid()`
-- Drag-and-drop via `@dnd-kit` (smooth, accessible, touch-friendly)
-- AI: Lovable AI Gateway with `google/gemini-3-flash-preview`; tool-calling for board actions; streaming via server function/edge function; conversation history kept in memory per session
-- Server functions (`createServerFn`) for all CRUD; `requireSupabaseAuth` middleware so RLS scopes data to the user
-- React Query for client cache + optimistic mutations
-- shadcn components (Dialog, Popover, DropdownMenu, Sheet for AI panel, Sonner for toasts)
+## Collection & product
 
-## Out of scope (can add later)
-- Sharing boards / multi-user collaboration
-- File attachments on tasks
-- List / Gantt / Calendar / Table views (board view only for v1)
-- Notifications / email reminders
+- `lib/products.ts` — local catalog of 6 candles (Vanilla Noir, Lavender Calm, Oud Royale, Rose Élysée, Ocean Drift, Café Maison) with slug, price, notes, burn time, image (use Unsplash/Pexels URLs).
+- Collection page: filter chips by mood (Calm / Warm / Fresh / Bold), grid of glassmorphism cards, quick-view dialog.
+- Product detail: split layout — left R3F mini candle in matching wax color; right name, notes, price, qty, "Add to cart", scent pyramid, related products.
+
+## Cart (local, checkout later)
+
+- `lib/cart.tsx` — Zustand-free context + `localStorage` persistence (`items`, `add/remove/update/clear`).
+- Slide-in `Sheet` cart drawer triggered from nav badge; subtotal + disabled "Checkout (coming soon)" button. Plan note: Stripe wiring left as a follow-up step using Lovable's built-in payments.
+
+## AI Concierge
+
+- New edge function `supabase/functions/candle-ai` (replaces `kanban-ai`), `verify_jwt = false`, calls Lovable AI gateway with `google/gemini-3-flash-preview` (streaming). System prompt: Ember & Oak concierge — recommends scents by mood/room, answers FAQ, can reference the catalog (passed in messages context).
+- `components/site/AIConcierge.tsx` — floating gold button bottom-right, opens luxe `Sheet` chat with markdown rendering, suggested prompts ("Help me pick a scent for my bedroom"), streamed tokens. Reuses streaming pattern from docs.
+
+## Contact
+
+- Elegant form (name, email, message) — submits to a new `contact_messages` table via supabase insert (no auth required, RLS allows anon insert only).
+- Socials, email, phone, WhatsApp deep link, embedded static map iframe.
+- Migration: create `contact_messages` table + RLS (insert: anon true; select: none).
+
+## Database changes
+
+- New migration:
+  - Drop kanban tables: `task_comments`, `tasks`, `board_columns`, `boards` (cascade). Keep `profiles` (harmless).
+  - Create `contact_messages(id, name, email, message, created_at)` with RLS allowing public insert only.
+
+## Global UX
+
+- Lenis smooth scroll mounted in `__root.tsx`.
+- Custom cursor blob (mix-blend-difference) that scales on interactive elements.
+- Page transitions via Framer Motion `AnimatePresence` keyed on route pathname.
+- Loading screen: first-mount overlay with logo + flame, fades after fonts/3D ready.
+- Responsive: 3D hero downgrades to a high-quality static composition + particles below `md`.
+
+## Deletions
+
+- `src/routes/board.tsx`, `login.tsx`, `signup.tsx`
+- `src/components/kanban/*`
+- `src/lib/kanban-api.ts`, `kanban-types.ts`, `auth.tsx`
+- `supabase/functions/kanban-ai/`
+
+## Out of scope (next step)
+
+- Real Stripe checkout (will offer Lovable's built-in Stripe payments after this lands).
+- User accounts / order history.
+- CMS for products.
