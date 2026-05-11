@@ -62,17 +62,19 @@ function RootComponent() {
   const [qc] = useState(() => new QueryClient());
   return (
     <QueryClientProvider client={qc}>
-      <CartProvider>
-        <SmoothScroll />
-        <Nav />
-        <main className="pt-24">
-          <Outlet />
-        </main>
-        <Footer />
-        <CartDrawer />
-        <AIConcierge />
-        <Toaster />
-      </CartProvider>
+      <ThemeProvider>
+        <CartProvider>
+          <SmoothScroll />
+          <Nav />
+          <main className="pt-24">
+            <Outlet />
+          </main>
+          <Footer />
+          <CartDrawer />
+          <AIConcierge />
+          <Toaster />
+        </CartProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
