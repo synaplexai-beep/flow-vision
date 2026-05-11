@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart";
+import { ThemeProvider } from "@/lib/theme";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { AIConcierge } from "@/components/site/AIConcierge";
@@ -61,17 +62,19 @@ function RootComponent() {
   const [qc] = useState(() => new QueryClient());
   return (
     <QueryClientProvider client={qc}>
-      <CartProvider>
-        <SmoothScroll />
-        <Nav />
-        <main className="pt-24">
-          <Outlet />
-        </main>
-        <Footer />
-        <CartDrawer />
-        <AIConcierge />
-        <Toaster />
-      </CartProvider>
+      <ThemeProvider>
+        <CartProvider>
+          <SmoothScroll />
+          <Nav />
+          <main className="pt-24">
+            <Outlet />
+          </main>
+          <Footer />
+          <CartDrawer />
+          <AIConcierge />
+          <Toaster />
+        </CartProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

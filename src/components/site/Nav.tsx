@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingBag, Flame, Menu, X } from "lucide-react";
+import { ShoppingBag, Flame, Menu, X, Sun, Moon } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/lib/cart";
+import { useTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -14,6 +15,7 @@ const links = [
 
 export function Nav() {
   const cart = useCart();
+  const { theme, toggle } = useTheme();
   const [mobile, setMobile] = useState(false);
 
   return (
@@ -43,6 +45,24 @@ export function Nav() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <button
+            onClick={toggle}
+            aria-label="Toggle theme"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full glass hover:ring-gold transition-shadow"
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={theme}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="inline-flex"
+              >
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </motion.span>
+            </AnimatePresence>
+          </button>
           <button
             onClick={() => cart.setOpen(true)}
             className={cn(
