@@ -15,6 +15,7 @@ const links = [
 
 export function Nav() {
   const cart = useCart();
+  const { theme, toggle } = useTheme();
   const [mobile, setMobile] = useState(false);
 
   return (
