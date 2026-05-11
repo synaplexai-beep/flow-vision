@@ -93,6 +93,38 @@
   --coal: oklch(0.14 0.01 60);    /* matte black */
 }
 
+html.light {
+  --background: oklch(0.98 0.01 85);
+  --foreground: oklch(0.18 0.012 60);
+
+  --card: oklch(1 0.005 85);
+  --card-foreground: oklch(0.18 0.012 60);
+  --popover: oklch(0.99 0.008 85);
+  --popover-foreground: oklch(0.18 0.012 60);
+
+  --primary: oklch(0.62 0.14 50);
+  --primary-foreground: oklch(0.99 0.01 85);
+
+  --secondary: oklch(0.94 0.012 80);
+  --secondary-foreground: oklch(0.20 0.012 60);
+
+  --muted: oklch(0.94 0.012 80);
+  --muted-foreground: oklch(0.42 0.018 60);
+
+  --accent: oklch(0.92 0.03 70);
+  --accent-foreground: oklch(0.18 0.012 60);
+
+  --border: oklch(0.18 0.012 60 / 10%);
+  --input: oklch(0.18 0.012 60 / 14%);
+  --ring: oklch(0.62 0.14 50);
+
+  --sidebar: oklch(0.97 0.01 85);
+  --sidebar-foreground: oklch(0.18 0.012 60);
+  --sidebar-accent: oklch(0.94 0.012 80);
+  --sidebar-accent-foreground: oklch(0.20 0.012 60);
+  --sidebar-border: oklch(0.18 0.012 60 / 10%);
+}
+
 @layer base {
   * { border-color: var(--color-border); }
   html, body { background: var(--background); color: var(--foreground); }
@@ -105,6 +137,12 @@
       linear-gradient(180deg, oklch(0.13 0.012 60), oklch(0.16 0.018 50));
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+  }
+  html.light body {
+    background:
+      radial-gradient(1200px 600px at 80% -10%, oklch(0.92 0.06 75 / 0.6), transparent 60%),
+      radial-gradient(900px 500px at 10% 110%, oklch(0.9 0.04 60 / 0.55), transparent 60%),
+      linear-gradient(180deg, oklch(0.985 0.012 85), oklch(0.96 0.018 80));
   }
   h1, h2, h3, .font-display { font-family: var(--font-display); letter-spacing: -0.015em; }
   ::selection { background: oklch(0.82 0.13 70 / 0.35); color: var(--foreground); }
