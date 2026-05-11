@@ -46,6 +46,24 @@ export function Nav() {
 
         <div className="flex items-center gap-2">
           <button
+            onClick={toggle}
+            aria-label="Toggle theme"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full glass hover:ring-gold transition-shadow"
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={theme}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="inline-flex"
+              >
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </motion.span>
+            </AnimatePresence>
+          </button>
+          <button
             onClick={() => cart.setOpen(true)}
             className={cn(
               "relative inline-flex h-10 items-center gap-2 rounded-full glass px-4 text-sm",
